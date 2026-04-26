@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./brdd_logo_favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Business Rule Driven Design (BRDD) - O Padrão Arquitetural focado em Regras de Negócio." />
+    <title>BRDD - Business Rule Driven Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <!-- Load i18n script first -->
+    <script src="./i18n.js"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar glass">
+      <div class="nav-content">
+        <div class="logo">
+          <img src="./brdd_logo_white.png" alt="BRDD Logo" height="40" />
+          <span>BRDD</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#manifesto" data-i18n="nav.manifesto">Manifesto</a></li>
+          <li><a href="#articles" data-i18n="nav.articles">Articles</a></li>
+          <li><a href="#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a></li>
+          <li>
+            <select id="lang-selector" class="lang-switcher">
+              <option value="en">EN</option>
+              <option value="pt">PT-BR</option>
+            </select>
+          </li>
+          <li><a href="https://github.com/brdd-design" target="_blank" class="btn-primary">GitHub</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-container container">
+        <div class="hero-content-wrapper">
+          <div class="hero-text">
+            <h1 class="hero-title" data-i18n="hero.title">Business Rule Driven <span class="gradient-text">Design</span></h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">
+              An architectural pattern focused on making business rules the absolute protagonists of software development.
+            </p>
+            <div class="hero-actions">
+              <a href="#ecosystem" class="btn-primary large" data-i18n="hero.btn.ecosystem">Explore Ecosystem</a>
+              <a href="#manifesto" class="btn-secondary large" data-i18n="hero.btn.story">Read the Story</a>
+            </div>
+          </div>
+          <div class="hero-graphic">
+            <img src="/media/generic_cover_landscape.png" alt="BRDD Architecture" class="hero-main-img" />
+          </div>
+        </div>
+
+        <!-- Concept Carousel -->
+        <div class="carousel-container">
+          <div class="carousel-track">
+            <div class="card glass interactive carousel-item">
+              <div class="icon">🎯</div>
+              <h3 data-i18n="manifesto.val.title">Rule Validation (R)</h3>
+              <p data-i18n="manifesto.val.desc">The ValidationService ensures business rules are met before main execution.</p>
+            </div>
+            <div class="card glass interactive carousel-item">
+              <div class="icon">⚙️</div>
+              <h3 data-i18n="manifesto.use.title">Use Cases (US)</h3>
+              <p data-i18n="manifesto.use.desc">The UseCase orchestrates main logic, keeping centralized control free from infrastructure coupling.</p>
+            </div>
+            <div class="card glass interactive carousel-item">
+              <div class="icon">✨</div>
+              <h3 data-i18n="manifesto.eff.title">Side Effects (CE)</h3>
+              <p data-i18n="manifesto.eff.desc">We document interactions with external systems (e-mails, messaging) as Side Effects reported by the Context.</p>
+            </div>
+            <div class="card glass interactive carousel-item">
+              <div class="icon">📊</div>
+              <h3 data-i18n="manifesto.ctx.title">Execution Context</h3>
+              <p data-i18n="manifesto.ctx.desc">The ExecutionContext acts as the single source of truth, logging errors, setters, and effects.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Full Manifesto Section -->
+    <section id="manifesto" class="section">
+      <div class="container">
+        <div class="manifesto-full-content glass">
+          <h2 class="text-center mb-4" data-i18n="manifesto.full.title">The BRDD Manifesto</h2>
+          <p class="lead text-center mb-5" data-i18n="manifesto.full.subtitle"></p>
+          
+          <div class="manifesto-grid">
+            <div class="manifesto-pillar">
+              <h3 data-i18n="manifesto.pillar1.title"></h3>
+              <p data-i18n="manifesto.pillar1.desc"></p>
+            </div>
+            <div class="manifesto-pillar">
+              <h3 data-i18n="manifesto.pillar2.title"></h3>
+              <p data-i18n="manifesto.pillar2.desc"></p>
+            </div>
+            <div class="manifesto-pillar">
+              <h3 data-i18n="manifesto.pillar3.title"></h3>
+              <p data-i18n="manifesto.pillar3.desc"></p>
+            </div>
+            <div class="manifesto-pillar">
+              <h3 data-i18n="manifesto.pillar4.title"></h3>
+              <p data-i18n="manifesto.pillar4.desc"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Articles Section (Knowledge Hub) -->
+    <section id="articles" class="section bg-alt">
+      <div class="section-header text-center">
+        <h2 data-i18n="articles.title">Knowledge Hub: Articles & Guides</h2>
+        <p data-i18n="articles.desc">Deep dive into BRDD concepts, origin stories, and practical implementations.</p>
+      </div>
+
+      <div class="articles-list container">
+        <a href="/story.html" class="glass interactive article-item">
+          <div class="article-info">
+            <h3 data-i18n="articles.story.title">BRDD: The Journey</h3>
+            <p data-i18n="articles.story.desc">How comparing different realities and legacy systems led to the creation of the Business Rule Driven Design pattern.</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+        <a href="/practical-example.html" class="glass interactive article-item">
+          <div class="article-info">
+            <h3 data-i18n="articles.example.title">BRDD in Practice</h3>
+            <p data-i18n="articles.example.desc">A practical implementation example of BRDD in a real-world inventory management scenario.</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Ecossistema (Repository Hub) -->
+    <section id="ecosystem" class="section">
+      <div class="section-header text-center">
+        <h2 data-i18n="ecosystem.title">Repository Hub (Native Libraries)</h2>
+        <p data-i18n="ecosystem.desc">The BRDD core ported to the 6 most used languages in the market. Ready for enterprise adoption.</p>
+      </div>
+
+      <div class="grid libs-grid container">
+        <!-- Python -->
+        <!-- Python -->
+        <a href="https://github.com/brdd-design/brdd-python" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" height="50" />
+          <h3>Python</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+
+        <!-- TS -->
+        <a href="https://github.com/brdd-design/brdd-typescript" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" height="50" />
+          <h3>TypeScript</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+
+        <!-- Go -->
+        <a href="https://github.com/brdd-design/brdd-go" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" alt="Go" height="50" />
+          <h3>Go</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+
+        <!-- Rust -->
+        <a href="https://github.com/brdd-design/brdd-rust" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg" alt="Rust" height="50" />
+          <h3>Rust</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+
+        <!-- .NET -->
+        <a href="https://github.com/brdd-design/brdd-dotnet" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" alt=".NET" height="50" />
+          <h3>.NET</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+
+        <!-- Java -->
+        <a href="https://github.com/brdd-design/brdd-java" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" height="50" />
+          <h3>Java</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content container">
+        <img src="/media/defol_logo_large.jpg" alt="Defol Tech" class="footer-logo" />
+        <p data-i18n="footer.maintained">Officially maintained by <strong>Defol Tech</strong>.</p>
+        <div class="footer-links">
+          <a href="mailto:defoltech@gmail.com" data-i18n="footer.contact">Contact (Email)</a>
+          <a href="#" target="_blank">LinkedIn (TODO)</a>
+          <a href="https://defol.com.br" target="_blank" data-i18n="footer.company">Company</a>
+          <a href="https://github.com/brdd-design" target="_blank">GitHub</a>
+        </div>
+        <p class="copyright">© 2026 BRDD Design. MIT License.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
