@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./brdd_logo_favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Business Rule Driven Design (BRDD) - Detailed UML Diagrams" />
+    <title>BRDD - UML Diagrams</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./i18n.js"></script>
+    <style>
+      .diagram-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-family: monospace;
+        margin-bottom: 40px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar glass">
+      <div class="nav-content">
+        <div class="logo">
+          <a href="index.html" style="text-decoration: none; display: flex; align-items: center; color: white;">
+            <img src="./brdd_logo_white.png" alt="BRDD Logo" height="40" style="margin-right: 10px;" />
+            <span>BRDD</span>
+          </a>
+        </div>
+        <ul class="nav-links">
+          <li><a href="index.html#manifesto" data-i18n="nav.manifesto">Manifesto</a></li>
+          <li><a href="index.html#articles" data-i18n="nav.articles">Articles</a></li>
+          <li><a href="index.html#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a></li>
+          <li>
+            <select id="lang-selector" class="lang-switcher">
+              <option value="en">EN</option>
+              <option value="pt">PT-BR</option>
+            </select>
+          </li>
+          <li><a href="https://github.com/brdd-design" target="_blank" class="btn-primary">GitHub</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <section class="section" style="padding-top: 120px;">
+      <div class="container text-center">
+        <h2>BRDD UML Diagrams</h2>
+        <p class="lead mb-5">These PlantUML diagrams detail the internal workflows and architecture of the BRDD pattern. You can copy the code and render it using the <a href="https://plantuml.com/plantuml/" target="_blank" style="color: #64b5f6;">PlantUML Web Server</a> or a local IDE extension.</p>
+        
+        <div class="diagram-section">
+          <h3>1. High Level Architecture</h3>
+          <p>Shows layers, responsibilities, and relationships between components.</p>
+          <div style="text-align: center; margin-bottom: 20px;"><img src="./diagrams/01-high-level-architecture.svg" alt="High Level Architecture Visual" style="max-width: 100%; border-radius: 8px; background: white; padding: 10px;"></div>
+          <pre class="diagram-block"><code>@startuml High_Level_Architecture
+
+!theme plain
+skinparam componentStyle rectangle
+
+package "Web / API Layer" {
+  [Client / External] &lt;&lt;Actor&gt;&gt;
+  [Router / Controller] &lt;&lt;Component&gt;&gt;
+  [ResponseService] &lt;&lt;Component&gt;&gt;
+}
+
+package "BRDD Core Layer" {
+  [UseCase] &lt;&lt;Orchestrator&gt;&gt;
+  [ValidateService] &lt;&lt;Component&gt;&gt;
+  [EnrichService] &lt;&lt;Component&gt;&gt;
+  [BusinessService] &lt;&lt;Component&gt;&gt;
+  [ClientService] &lt;&lt;Component&gt;&gt;
+  [Listener] &lt;&lt;Component&gt;&gt;
+}
+
+package "Domain Layer" {
+  [Domain Model] &lt;&lt;Data&gt;&gt;
+}
+
+package "Contexts" {
+  [ExecutionContext] &lt;&lt;Context&gt;&gt;
+  [ValidationContext] &lt;&lt;Context&gt;&gt;
+}
+
+package "External Layer" {
+  [External Domain] &lt;&lt;External System&gt;&gt;
+}
+
+[Client / External] --> [Router / Controller] : Request (DTO)
+
+' Simple Flow Bypass
+[Router / Controller] --> [BusinessService] : Simple Flow (No Orchestration)
+[Router / Controller] --> [ClientService] : Simple Flow (No Orchestration)
+
+' Complex Flow
+[Router / Controller] --> [UseCase] : Complex Flow (Delegates Orchestration)
+
+[UseCase] --> [ValidateService] : Calls for Rules Validation
+[UseCase] --> [EnrichService] : Calls for Data Enrichment
+[UseCase] --> [BusinessService] : Calls Core Logic / Effects
+[UseCase] --> [ClientService] : Calls External APIs / Effects
+[Listener] --> [UseCase] : Triggers from Events
+
+[ValidateService] ..> [ValidationContext] : creates (Errors only)
+[ValidateService] --> [Domain Model] : validates (requires enriched data)
+[EnrichService] --> [Domain Model] : queries & enriches (no logic)
+[BusinessService] --> [Domain Model] : executes business rules
+
+[ClientService] --> [External Domain] : interacts (converts Internal <-> External)
+[Listener] --> [External Domain] : consumes
+
+[UseCase] ..> [ExecutionContext] : returns
+[ExecutionContext] --> [ValidationContext] : contains
+[ExecutionContext] --> [Domain Model] : contains Data
+
+[UseCase] --> [ResponseService] : hands over ExecutionContext
+[BusinessService] --> [ResponseService] : hands over raw data
+[ClientService] --> [ResponseService] : hands over raw data
+[ResponseService] --> [Client / External] : Unified JSON Response
+
+@enduml</code></pre>
+        </div>
+
+        <div class="diagram-section">
+          <h3>2. Core Sync Flow</h3>
+          <p>The step-by-step execution path when a request enters the system.</p>
+          <div style="text-align: center; margin-bottom: 20px;"><img src="./diagrams/02-core-sync-flow.svg" alt="Core Sync Flow Visual" style="max-width: 100%; border-radius: 8px; background: white; padding: 10px;"></div>
+          <pre class="diagram-block"><code>@startuml Core_Sync_Flow
+
+start
+:Client faz Request;
+:Router / Controller recebe Request;
+
+if (Requer múltiplos serviços / orquestração?) then (Não - Simple Flow)
+  if (É Lógica Interna ou Externa?) then (Interna)
+    :Controller executa **BusinessService** diretamente;
+  else (Externa)
+    :Controller executa **ClientService** diretamente;
+  endif
+  :Serviço retorna dados brutos;
+else (Sim - Complex Flow)
+  :Controller aciona o **UseCase**;
+
+  partition "BRDD UseCase Pipeline" {
+    :UseCase inicializa **ExecutionContext**;
+    
+    if (Precisa enriquecer dados base?) then (Sim)
+      :UseCase executa **EnrichService** (Apenas buscas);
+      :UseCase registra **Setters** no Context;
+    endif
+
+    if (Existem Regras de Validação?) then (Sim)
+      :UseCase executa **ValidateService** (Recebe dados enriquecidos);
+      :ValidateService popula **ValidationContext** com Erros;
+    endif
+
+    if (ValidationContext possui Erros?) then (Sim)
+      :Interrompe pipeline;
+    else (Não)
+      partition "Execução Principal" {
+        if (Lógica é Interna ou Externa?) then (Interna)
+          :UseCase executa **BusinessService** (Regra de Negócios);
+        else (Externa)
+          :UseCase executa **ClientService** (Integração Externa);
+        endif
+      }
+
+      partition "Efeitos Colaterais" {
+        while (Existem Efeitos Colaterais?) is (Sim)
+          if (Tipo do Efeito) then (Interno)
+            :UseCase executa **BusinessService** secundário;
+          else (Externo)
+            :UseCase executa **ClientService** secundário;
+          endif
+          :UseCase registra **Effects** no Context;
+        endwhile (Não)
+      }
+    endif
+  }
+  :UseCase retorna **ExecutionContext**;
+endif
+
+:ResponseService formata para **Unified JSON Response**;
+:Controller envia Response ao Client;
+
+stop
+
+@enduml</code></pre>
+        </div>
+
+        <div class="diagram-section">
+          <h3>3. Sequence Diagram</h3>
+          <p>The temporal sequence of calls between objects.</p>
+          <div style="text-align: center; margin-bottom: 20px;"><img src="./diagrams/03-sequence-diagram.svg" alt="Sequence Diagram Visual" style="max-width: 100%; border-radius: 8px; background: white; padding: 10px;"></div>
+          <pre class="diagram-block"><code>@startuml Sequence_Diagram
+
+actor Client
+participant "Router/Controller" as Controller
+participant UseCase
+participant EnrichService
+participant ValidateService
+participant BusinessService
+participant "ClientService" as ExtClient
+participant "External Domain" as ExtAPI
+participant ResponseService
+
+Client -> Controller: Request (DTO)
+activate Controller
+
+alt Simple Flow (No Orchestration)
+    alt Internal Logic
+        Controller -> BusinessService: run(DomainModel)
+        activate BusinessService
+        BusinessService --> Controller: Result Data
+        deactivate BusinessService
+    else External Logic
+        Controller -> ExtClient: call(DomainModel)
+        activate ExtClient
+        ExtClient -> ExtAPI: Convert to External & Call
+        activate ExtAPI
+        ExtAPI --> ExtClient: Response
+        deactivate ExtAPI
+        ExtClient --> Controller: Convert to Internal Result Data
+        deactivate ExtClient
+    end
+else Complex Flow (Orchestration Required)
+    Controller -> UseCase: execute(DomainModel)
+    activate UseCase
+
+    opt Enrichment
+        UseCase -> EnrichService: queryForEnrichment()
+        activate EnrichService
+        EnrichService --> UseCase: Updated Model (No Logic)
+        deactivate EnrichService
+    end
+
+    opt Validation
+        UseCase -> ValidateService: validate(PreEnrichedModel)
+        activate ValidateService
+        ValidateService --> UseCase: ValidationContext (Errors)
+        deactivate ValidateService
+    end
+
+    alt Validation Passed
+        alt Principal Flow (Internal)
+            UseCase -> BusinessService: run(DomainModel)
+            activate BusinessService
+            BusinessService --> UseCase: Business Execution Result
+            deactivate BusinessService
+        else Principal Flow (External)
+            UseCase -> ExtClient: call(DomainModel)
+            activate ExtClient
+            ExtClient -> ExtAPI: API Call
+            activate ExtAPI
+            ExtAPI --> ExtClient: Response
+            deactivate ExtAPI
+            ExtClient --> UseCase: External Data
+            deactivate ExtClient
+        end
+
+        loop Side Effects
+            alt Internal Effect
+                UseCase -> BusinessService: run(EffectContext)
+                activate BusinessService
+                BusinessService --> UseCase: Effect Result
+                deactivate BusinessService
+            else External Effect
+                UseCase -> ExtClient: call(EffectContext)
+                activate ExtClient
+                ExtClient -> ExtAPI: API Call
+                activate ExtAPI
+                ExtAPI --> ExtClient: Response
+                deactivate ExtAPI
+                ExtClient --> UseCase: Effect Result
+                deactivate ExtClient
+            end
+        end
+    else Validation Failed
+        note over UseCase: Pipeline Interrupted
+    end
+
+    UseCase --> Controller: ExecutionContext
+    deactivate UseCase
+end
+
+Controller -> ResponseService: format(Result / Context)
+activate ResponseService
+ResponseService --> Controller: Unified JSON
+deactivate ResponseService
+
+Controller --> Client: HTTP Response
+deactivate Controller
+
+@enduml</code></pre>
+        </div>
+
+        <div class="diagram-section">
+          <h3>4. Data Transformation Flow</h3>
+          <p>How data mutates between layers.</p>
+          <div style="text-align: center; margin-bottom: 20px;"><img src="./diagrams/04-data-transformation-flow.svg" alt="Data Transformation Flow Visual" style="max-width: 100%; border-radius: 8px; background: white; padding: 10px;"></div>
+          <pre class="diagram-block"><code>@startuml Data_Transformation_Flow
+
+!theme plain
+skinparam state {
+  BackgroundColor&lt;&lt;External&gt;&gt; LightGray
+  BackgroundColor&lt;&lt;Core&gt;&gt; Thistle
+  BackgroundColor&lt;&lt;Domain&gt;&gt; LightGoldenRodYellow
+  BackgroundColor&lt;&lt;DTO&gt;&gt; LightBlue
+}
+
+state "Incoming DTO" as DTO &lt;&lt;DTO&gt;&gt;
+state "Domain Model" as DomainModel &lt;&lt;Domain&gt;&gt;
+state "External Request" as ExtReq &lt;&lt;External&gt;&gt;
+state "External Response" as ExtRes &lt;&lt;External&gt;&gt;
+state "Execution Context" as Context &lt;&lt;Core&gt;&gt;
+state "Unified JSON Response" as UnifiedResp &lt;&lt;DTO&gt;&gt;
+
+[*] --> DTO : HTTP Request
+DTO --> DomainModel : Mapped to Domain
+
+state "Execution Flow Decision" as FlowDec {
+  state "Simple Flow" as Simple {
+    DomainModel --> DomainModel : Mutated (BusinessService)
+    DomainModel --> ExtReq : Mapped (ClientService)
+    ExtReq --> ExtRes : External Call
+    ExtRes --> DomainModel : Mapped Back (ClientService)
+  }
+  
+  state "Complex Flow (UseCase)" as Complex {
+    DomainModel --> DomainModel : Enriched via Queries (EnrichService)
+    DomainModel --> DomainModel : Validated (ValidateService)
+    
+    state "Business/External Execution" as BusExtExec {
+      DomainModel --> DomainModel : Mutated (BusinessService)
+      DomainModel --> ExtReq : Mapped (ClientService)
+      ExtReq --> ExtRes : External Call
+      ExtRes --> DomainModel : Mapped Back (ClientService)
+    }
+    
+    BusExtExec --> Context : Wrapped with Setters & Effects
+  }
+}
+
+Simple --> UnifiedResp : ResponseService formats Raw Result
+Context --> UnifiedResp : ResponseService formats Context
+UnifiedResp --> [*] : HTTP Response
+
+note right of DTO : Raw API Input
+note right of DomainModel : Business Logic Data
+note right of ExtReq : Third-party structures
+note right of Context : BRDD Storyteller
+
+@enduml</code></pre>
+        </div>
+
+        <div class="diagram-section">
+          <h3>5. Error Handling Flow</h3>
+          <p>Mapping behavior in case of validation failures or external API errors.</p>
+          <div style="text-align: center; margin-bottom: 20px;"><img src="./diagrams/05-error-handling-flow.svg" alt="Error Handling Flow Visual" style="max-width: 100%; border-radius: 8px; background: white; padding: 10px;"></div>
+          <pre class="diagram-block"><code>@startuml Error_Handling_Flow
+
+start
+
+:Router / Controller recebe **Request**;
+
+if (Simple Flow ou Complex Flow?) then (Simple)
+  :BusinessService ou ClientService executado;
+  if (Falha na Lógica ou Chamada Externa?) then (Sim)
+    :Controller recebe Exception / Error;
+    :ResponseService formata para **Unified JSON Response** (ex: 400 ou 502);
+    stop
+  else (Não)
+  endif
+
+else (Complex - UseCase)
+  :UseCase inicia **ExecutionContext**;
+
+  partition "BRDD UseCase Pipeline" {
+    
+    :EnrichService (Opcional - Apenas Buscas);
+    if (Erro Inesperado Infra?) then (Sim)
+      :Retorna ExecutionContext com status Error/500;
+      stop
+    else (Não)
+    endif
+
+    :ValidateService verifica regras (Dados Pre-enriquecidos);
+    if (Regras de Negócio Quebradas?) then (Sim)
+      :Adiciona Erro ao **ValidationContext** (ex: R001);
+      :Retorna ExecutionContext com status UnprocessableEntity/422;
+      stop
+    else (Não)
+    endif
+
+    partition "Principal Flow / Side Effects" {
+      :BusinessService ou ClientService executado;
+      if (Falha na Lógica ou Chamada Externa?) then (Sim)
+        if (Permite Retry/Fallback?) then (Sim)
+          :Aplica Lógica de Fallback;
+          :Registra Fallback Effect no Context;
+        else (Não)
+          :Adiciona Erro no Context (Business/External Error);
+          :Retorna ExecutionContext (ex: 400 ou 502);
+          stop
+        endif
+      else (Sucesso)
+        :Registra Efeito de Sucesso (se aplicável);
+      endif
+    }
+  }
+endif
+
+:ResponseService formata **Unified JSON Response**;
+:Retorna Resposta HTTP;
+
+stop
+
+@enduml</code></pre>
+        </div>
+
+        <div class="diagram-section">
+          <h3>6. Class / Interface Structure</h3>
+          <p>Core interfaces based on the standard library implementations (TypeScript/C#/etc).</p>
+          <div style="text-align: center; margin-bottom: 20px;"><img src="./diagrams/06-class-interface-diagram.svg" alt="Class / Interface Structure Visual" style="max-width: 100%; border-radius: 8px; background: white; padding: 10px;"></div>
+          <pre class="diagram-block"><code>@startuml Class_Interface_Structure
+interface IValidationContext {
+  + addError(code: string, message: string)
+  + hasErrors(): boolean
+  + getErrors(): IBaseError[]
+}
+
+interface IExecutionContext {
+  + data: any
+  + validation: IValidationContext
+  + setters: string[]
+  + effects: string[]
+  + set(code: string, value: any)
+  + addEffect(code: string)
+  + is_valid(): boolean
+}
+
+interface IUseCase&lt;TInput, TOutput&gt; {
+  + execute(input: TInput): IExecutionContext
+}
+
+class StandardResponse {
+  + data: any
+  + message: string
+  + status: int
+  + errors: IBaseError[]
+  + setters: string[]
+  + effects: string[]
+}
+
+IExecutionContext *-- IValidationContext
+IUseCase ..&gt; IExecutionContext : returns
+StandardResponse ..&gt; IExecutionContext : maps from
+@enduml</code></pre>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content container">
+        <p class="copyright">© 2026 BRDD Design. MIT License.</p>
+      </div>
+    </footer>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

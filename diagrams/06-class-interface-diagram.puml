@@ -1,0 +1,34 @@
+@startuml
+interface IValidationContext {
+  + addError(code: string, message: string)
+  + hasErrors(): boolean
+  + getErrors(): IBaseError[]
+}
+
+interface IExecutionContext {
+  + data: any
+  + validation: IValidationContext
+  + setters: string[]
+  + effects: string[]
+  + set(code: string, value: any)
+  + addEffect(code: string)
+  + is_valid(): boolean
+}
+
+interface IUseCase<TInput, TOutput> {
+  + execute(input: TInput): IExecutionContext
+}
+
+class StandardResponse {
+  + data: any
+  + message: string
+  + status: int
+  + errors: IBaseError[]
+  + setters: string[]
+  + effects: string[]
+}
+
+IExecutionContext *-- IValidationContext
+IUseCase ..> IExecutionContext : returns
+StandardResponse ..> IExecutionContext : maps from
+@enduml

@@ -23,8 +23,10 @@
         </div>
         <ul class="nav-links">
           <li><a href="#manifesto" data-i18n="nav.manifesto">Manifesto</a></li>
+          <li><a href="#modules" data-i18n="nav.modules">Modules</a></li>
           <li><a href="#articles" data-i18n="nav.articles">Articles</a></li>
           <li><a href="#ecosystem" data-i18n="nav.ecosystem">Ecosystem</a></li>
+          <li><a href="#reference" data-i18n="nav.reference">Reference</a></li>
           <li>
             <select id="lang-selector" class="lang-switcher">
               <option value="en">EN</option>
@@ -47,12 +49,12 @@
               An architectural pattern focused on making business rules the absolute protagonists of software development.
             </p>
             <div class="hero-actions">
-              <a href="#ecosystem" class="btn-primary large" data-i18n="hero.btn.ecosystem">Explore Ecosystem</a>
-              <a href="#manifesto" class="btn-secondary large" data-i18n="hero.btn.story">Read the Story</a>
+              <a href="#modules" class="btn-primary large" data-i18n="hero.btn.ecosystem">Explore Ecosystem</a>
+              <a href="./story.html" class="btn-secondary large" data-i18n="hero.btn.story">Read the Story</a>
             </div>
           </div>
           <div class="hero-graphic">
-            <img src="/media/generic_cover_landscape.png" alt="BRDD Architecture" class="hero-main-img" />
+            <img src="./brdd-core-diagram.jpg" alt="BRDD Architecture" class="hero-main-img" />
           </div>
         </div>
 
@@ -109,7 +111,112 @@
               <p data-i18n="manifesto.pillar4.desc"></p>
             </div>
           </div>
+          
+          <!-- AI-First Highlight -->
+          <div class="ai-highlight mt-5">
+            <h3 class="text-center mb-3" data-i18n="ai.title">🤖 AI-First Architectural Design</h3>
+            <p class="text-center" data-i18n="ai.desc"></p>
+            
+            <div class="ai-usage-container mt-4">
+              <h4 class="text-center mb-3" data-i18n="ai.usage.title" style="color: var(--text-main);">How to Apply BRDD</h4>
+              <div class="ai-usage-grid">
+                <div class="usage-card glass">
+                  <h5 data-i18n="ai.usage.lib.title">1. Semantic Libraries</h5>
+                  <p data-i18n="ai.usage.lib.desc">Import our native libraries to enforce the pattern structurally via code.</p>
+                </div>
+                <div class="usage-card glass">
+                  <h5 data-i18n="ai.usage.prompt.title">2. AI Prompting (AGENTS.md)</h5>
+                  <p data-i18n="ai.usage.prompt.desc">Instruct your IDE (Cursor, Copilot) to follow the pattern without any dependencies.</p>
+                </div>
+              </div>
+              
+              <div class="prompt-box mt-4">
+                <div class="prompt-header">
+                  <span data-i18n="ai.prompt.copy">Example AGENTS.md Snippet</span>
+                </div>
+                <pre><code># Architectural Rules
+This project strictly follows the Business Rule Driven Design (BRDD) pattern.
+When creating, refactoring, or modifying business logic, you MUST adhere to these rules:
+1. Orchestration: Use Cases MUST return a standardized ExecutionContext (containing data, setters, effects, and errors), never raw data.
+2. Validation: Isolate all validation logic into a dedicated ValidateService. Use Cases must not contain validation IFs.
+3. Traceability: Map all rules, validations, setters, and side effects with unique business codes (e.g., RULE_001, EFF_001).
+4. Isolation: Never mix external I/O (DB calls, APIs) directly into the business logic. Use specialized Clients or Listeners.
+
+For the full specification and structural blueprint, refer to the official documentation:
+https://github.com/brdd-design/brdd/blob/main/BRDD.md</code></pre>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Ecosystem Modules Section -->
+    <section id="modules" class="section bg-alt">
+      <div class="container">
+        <div class="section-header text-center">
+          <h2 data-i18n="modules.title">Ecosystem Modules</h2>
+          <p data-i18n="modules.desc">The BRDD project is modular, allowing you to adopt only the parts that fit your architecture.</p>
+        </div>
+
+        <div class="modules-grid">
+          <!-- Core -->
+          <div class="module-card glass interactive">
+            <span class="module-status status-stable" data-i18n="modules.status.stable">Stable</span>
+            <div class="icon">💎</div>
+            <h3 data-i18n="modules.core.title">BRDD Core</h3>
+            <p data-i18n="modules.core.desc">The foundation. Unified response, execution context, and service specialization.</p>
+          </div>
+
+          <!-- Async -->
+          <div class="module-card glass interactive">
+            <span class="module-status status-validation" data-i18n="modules.status.validation">In Validation</span>
+            <div class="icon">⚡</div>
+            <h3 data-i18n="modules.async.title">BRDD Async</h3>
+            <p data-i18n="modules.async.desc">Asynchronous flows, messaging, and event-driven patterns.</p>
+          </div>
+
+          <!-- BPMN -->
+          <div class="module-card glass interactive">
+            <span class="module-status status-validation" data-i18n="modules.status.validation">In Validation</span>
+            <div class="icon">⚙️</div>
+            <h3 data-i18n="modules.bpmn.title">Async BPMN</h3>
+            <p data-i18n="modules.bpmn.desc">Visual orchestration using BPMN standard and BBJN notation.</p>
+          </div>
+
+          <!-- Chain -->
+          <div class="module-card glass interactive">
+            <span class="module-status status-validation" data-i18n="modules.status.validation">In Validation</span>
+            <div class="icon">🔗</div>
+            <h3 data-i18n="modules.chain.title">Async Chain</h3>
+            <p data-i18n="modules.chain.desc">Decentralized execution on Blockchain for high-trust processes.</p>
+          </div>
+
+          <!-- Cloud -->
+          <div class="module-card glass interactive">
+            <span class="module-status status-validation" data-i18n="modules.status.validation">In Validation</span>
+            <div class="icon">☁️</div>
+            <h3 data-i18n="modules.cloud.title">BRDD Cloud</h3>
+            <p data-i18n="modules.cloud.desc">Resource traceability and neutral cloud naming conventions.</p>
+          </div>
+        </div>
+
+        <div class="validation-disclaimer text-center">
+          <p data-i18n="modules.validation.note">Modules in <strong>Validation Phase</strong> are being tested in production scenarios to ensure stability before official release.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Visual Section -->
+    <section id="architecture" class="section bg-alt">
+      <div class="section-header text-center">
+        <h2 data-i18n="architecture.title">BRDD Flow Architecture</h2>
+        <p data-i18n="architecture.desc">A visual representation of the core Business Rule Driven Design data flow.</p>
+      </div>
+      <div class="container text-center">
+        <img src="./brdd-core-diagram.jpg" alt="BRDD Core Flow Visual Diagram" style="max-width: 100%; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" />
+        <br/>
+        <a href="./diagrams.html" class="btn-primary" data-i18n="architecture.btn.diagrams">View Detailed UML Diagrams</a>
       </div>
     </section>
 
@@ -146,7 +253,6 @@
       </div>
 
       <div class="grid libs-grid container">
-        <!-- Python -->
         <!-- Python -->
         <a href="https://github.com/brdd-design/brdd-python" target="_blank" class="lib-card glass">
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" height="50" />
@@ -188,17 +294,101 @@
           <h3>Java</h3>
           <span class="badge" data-i18n="ecosystem.view">View Repository</span>
         </a>
+
+        <!-- PHP -->
+        <a href="https://github.com/brdd-design/brdd-php" target="_blank" class="lib-card glass">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP" height="50" />
+          <h3>PHP</h3>
+          <span class="badge" data-i18n="ecosystem.view">View Repository</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Reference Hub (Quick Access) -->
+    <section id="reference" class="section reference-hub bg-alt">
+      <div class="container">
+        <div class="section-header text-center">
+          <h2 data-i18n="ref.title">Quick Reference Hub</h2>
+          <p data-i18n="ref.desc">All official links, installation commands, and documentation in one place.</p>
+        </div>
+
+        <div class="ref-table-container glass">
+          <table class="ref-table">
+            <thead>
+              <tr>
+                <th data-i18n="ref.col.name">Resource</th>
+                <th data-i18n="ref.col.type">Type</th>
+                <th data-i18n="ref.col.install">Install / Access</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Libraries -->
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-python" class="ref-link" target="_blank">🐍 BRDD Python</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">pip install brdd-python</code></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-typescript" class="ref-link" target="_blank">📜 BRDD TypeScript</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">npm install @brdd-design/core</code></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-dotnet" class="ref-link" target="_blank">🔷 BRDD .NET</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">dotnet add package Brdd.Design.Core</code></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-rust" class="ref-link" target="_blank">🦀 BRDD Rust</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">cargo add brdd-rust</code></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-go" class="ref-link" target="_blank">🐹 BRDD Go</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">go get github.com/brdd-design/brdd-go</code></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-java" class="ref-link" target="_blank">☕ BRDD Java</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">io.github.brdd-design:brdd-java</code></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd-php" class="ref-link" target="_blank">🐘 BRDD PHP</a></td>
+                <td><span class="ref-badge lib">Library</span></td>
+                <td><code class="ref-install">composer require brdd/brdd-php</code></td>
+              </tr>
+              <!-- Core Docs -->
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd/blob/main/BRDD.md" class="ref-link" target="_blank">📖 The Manifesto</a></td>
+                <td><span class="ref-badge doc">Core Doc</span></td>
+                <td><span class="ref-install">GitHub / Markdown</span></td>
+              </tr>
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd/tree/main/articles" class="ref-link" target="_blank">📚 Knowledge Hub</a></td>
+                <td><span class="ref-badge doc">Articles</span></td>
+                <td><span class="ref-install">Guides & Stories</span></td>
+              </tr>
+              <!-- Repos -->
+              <tr>
+                <td><a href="https://github.com/brdd-design/brdd" class="ref-link" target="_blank">🔵 BRDD Hub</a></td>
+                <td><span class="ref-badge repo">Repository</span></td>
+                <td><span class="ref-install">Main Organization Hub</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <!-- Footer -->
     <footer>
       <div class="footer-content container">
-        <img src="/media/defol_logo_large.jpg" alt="Defol Tech" class="footer-logo" />
+        <img src="./defol_logo_large.jpg" alt="Defol Tech" class="footer-logo" />
         <p data-i18n="footer.maintained">Officially maintained by <strong>Defol Tech</strong>.</p>
         <div class="footer-links">
           <a href="mailto:defoltech@gmail.com" data-i18n="footer.contact">Contact (Email)</a>
-          <a href="#" target="_blank">LinkedIn (TODO)</a>
+          <a href="https://linkedin.com/company/defol/" target="_blank">LinkedIn</a>
           <a href="https://defol.com.br" target="_blank" data-i18n="footer.company">Company</a>
           <a href="https://github.com/brdd-design" target="_blank">GitHub</a>
         </div>

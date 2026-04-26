@@ -16,6 +16,7 @@
       .article-cover { width: 100%; border-radius: 16px; margin-bottom: 40px; box-shadow: var(--shadow-lg); }
       .article-content h1 { font-size: 2.5rem; margin-bottom: 20px; color: var(--gold-rules); }
       .article-content h2 { font-size: 1.8rem; margin: 40px 0 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+      .article-content h3 { font-size: 1.4rem; margin: 25px 0 15px; color: var(--defol-blue-light); }
       .article-content p { margin-bottom: 20px; font-size: 1.1rem; color: #d0d8e0; line-height: 1.8; }
       .article-content pre { background: #121a28; padding: 20px; border-radius: 8px; overflow-x: auto; margin-bottom: 20px; border: 1px solid var(--glass-border); }
       .article-content code { font-family: monospace; color: #a0aec0; }
@@ -49,121 +50,115 @@
       <!-- ENGLISH BLOCK -->
       <div class="article-content" data-lang-block="en">
         <h1>BRDD in Practice: Implementation Example</h1>
-        <p>In this article, we'll apply BRDD concepts to a real-world inventory management scenario. The objective is to explicitly separate rules, enrichments, and side effects.</p>
+        <p>In this article, we apply BRDD concepts to a real-world inventory management scenario using the modular Use Case structure.</p>
         
-        <h2>1. Mapping Business Rules</h2>
-        <p>Before coding, the business team defines the journey:</p>
-        <pre><code>UseCase: Consume Product (US001)
-Rules:
-- R001: Validate if product exists
-- R002: Validate if there is enough quantity
+        <h2>USE CASE: Product Consumption (UC001)</h2>
+        <p>The orchestrator that coordinates the logic for a user consuming an item from stock.</p>
 
-Enrichments:
-- ENR001: Fetch current product details from database
+        <h3>🛡️ Business Rules (Validations)</h3>
+        <ul>
+          <li><strong>R001:</strong> Validate if the product ID exists in the active catalog.</li>
+          <li><strong>R002:</strong> Validate if the available stock is greater than or equal to the requested quantity.</li>
+        </ul>
 
-Effects:
-- CE001: Update partner systems (Stock API)
-- SET001: Set consumption date</code></pre>
+        <h3>💾 State Setters (Side Effects)</h3>
+        <ul>
+          <li><strong>SET001:</strong> Update the product's <code>last_consumption_date</code>.</li>
+          <li><strong>SET002:</strong> Decrease the <code>total_stock</code> by the consumed amount.</li>
+        </ul>
 
-        <h2>2. Implementing Services</h2>
-        <p>Using the single-responsibility principle, each step becomes a dedicated service:</p>
-        <pre><code>// EnrichService
-class FetchProductEnricher implements EnrichService {
-    enrich(context, input) {
-        // ENR001: Fetch data
-        context.addEffect("ENR001");
-        return db.getProduct(input.id);
-    }
-}
+        <h3>🌐 External Effects (External Clients)</h3>
+        <ul>
+          <li><strong>EXT001:</strong> Notify the Logistics API about the stock movement.</li>
+          <li><strong>EXT002:</strong> Trigger an email alert if stock falls below the minimum threshold.</li>
+        </ul>
+        
+        <h3>📄 Documentation Standard (.md)</h3>
+        <p>This is the "Master Prompt" that guides the AI in implementing the code below.</p>
+        <pre><code>### `UC_STOCK_001` - Product Consumption
+> Manages the reduction of physical stock after a purchase.
 
-// ValidationService
-class CheckQuantityValidator implements ValidateService {
-    validate(context, data) {
-        if (data.stock < data.requested) {
-            context.addError("R002", "Insufficient quantity");
-        }
-    }
-}</code></pre>
+#### 🛡️ Business Rules
+- **`R001`**: Product must exist. -> "Product not found."
+- **`R002`**: Sufficient stock available. -> "Insufficient stock."
 
-        <h2>3. The Use Case (Orchestrator)</h2>
-        <p>The Use Case simply orchestrates the mapped rules and reports the Context:</p>
-        <pre><code>class ConsumeProductUseCase {
+#### 🛠️ Setters
+- **`SET001`**: Update last_consumption_date.
+- **`SET002`**: Decrease total_stock.
+
+#### ⚡ Effects
+- **`EXT001`**: Notify Logistics API.
+- **`EXT002`**: Alert if stock is low.</code></pre>
+
+        <h2>Technical Implementation Example</h2>
+        <p>The Use Case simply orchestrates these sub-groups using the <code>ExecutionContext</code>:</p>
+        <pre><code>// Use Case Logic
+class ConsumeProductUseCase {
     execute(input) {
         const ctx = new DefaultExecutionContext();
         
+        // 1. Enrichment
         const data = this.enricher.enrich(ctx, input);
+        
+        // 2. Validation (Business Rules)
         this.validator.validate(ctx, data);
         
         if (!ctx.isValid()) return ctx;
         
-        // Execute main action
-        this.client.execute(ctx, data); // CE001
+        // 3. Execution (Setters & External Effects)
+        this.client.execute(ctx, data);
         
         return ctx;
     }
 }</code></pre>
 
-        <a href="https://github.com/brdd-design" target="_blank" class="github-link" data-i18n="article.view_md">View original Markdown on GitHub (TODO)</a>
+        <a href="https://github.com/brdd-design/brdd/blob/main/articles/EN/BRDD-PRACTICAL-EXAMPLE.md" target="_blank" class="github-link" data-i18n="article.view_md">View original Markdown on GitHub</a>
       </div>
 
       <!-- PORTUGUESE BLOCK -->
       <div class="article-content" data-lang-block="pt" style="display:none;">
         <h1>BRDD na Prática: Exemplo de Implementação</h1>
-        <p>Neste artigo, vamos aplicar os conceitos do BRDD em um cenário real de gerenciamento de estoque. O objetivo é separar explicitamente regras, enriquecimentos e efeitos colaterais.</p>
+        <p>Neste artigo, aplicamos os conceitos do BRDD em um cenário real de gerenciamento de estoque usando a estrutura modular de Caso de Uso.</p>
         
-        <h2>1. Mapeamento das Regras</h2>
-        <p>Antes de codar, o time de negócios define a jornada:</p>
-        <pre><code>UseCase: Consumir Produto (US001)
-Regras:
-- R001: Validar se o produto existe
-- R002: Validar se há quantidade suficiente
+        <h2>CASO DE USO: Consumo de Produto (UC001)</h2>
+        <p>O orquestrador que coordena a lógica de um usuário consumindo um item do estoque.</p>
 
-Enriquecimentos:
-- ENR001: Buscar detalhes do produto no banco
+        <h3>🛡️ Regras de Negócio (Validações)</h3>
+        <ul>
+          <li><strong>R001:</strong> Validar se o ID do produto existe no catálogo ativo.</li>
+          <li><strong>R002:</strong> Validar se o estoque disponível é maior ou igual à quantidade solicitada.</li>
+        </ul>
 
-Efeitos:
-- CE001: Atualizar sistemas parceiros (API de Estoque)
-- SET001: Setar data de consumo</code></pre>
+        <h3>💾 State Setters (Efeitos Internos)</h3>
+        <ul>
+          <li><strong>SET001:</strong> Atualizar a <code>last_consumption_date</code> do produto.</li>
+          <li><strong>SET002:</strong> Decrementar o <code>total_stock</code> pelo valor consumido.</li>
+        </ul>
 
-        <h2>2. Implementando os Serviços</h2>
-        <p>Usando o princípio da responsabilidade única, cada passo vira um serviço dedicado:</p>
-        <pre><code>// EnrichService
-class FetchProductEnricher implements EnrichService {
-    enrich(context, input) {
-        // ENR001: Fetch data
-        context.addEffect("ENR001");
-        return db.getProduct(input.id);
-    }
-}
+        <h3>🌐 Efeitos Externos (Clientes Externos)</h3>
+        <ul>
+          <li><strong>EXT001:</strong> Notificar a API de Logística sobre a movimentação.</li>
+          <li><strong>EXT002:</strong> Disparar alerta de e-mail se o estoque cair abaixo do limite mínimo.</li>
+        </ul>
 
-// ValidationService
-class CheckQuantityValidator implements ValidateService {
-    validate(context, data) {
-        if (data.stock < data.requested) {
-            context.addError("R002", "Quantidade insuficiente");
-        }
-    }
-}</code></pre>
+        <h3>📄 Padrão de Documentação (.md)</h3>
+        <p>Este é o "Master Prompt" que guia a IA na implementação do código abaixo.</p>
+        <pre><code>### `UC_ESTOQUE_001` - Consumo de Produto
+> Gerencia a redução de estoque físico após uma compra.
 
-        <h2>3. O Caso de Uso (Orquestrador)</h2>
-        <p>O Use Case simplesmente orquestra as regras mapeadas e devolve o Contexto:</p>
-        <pre><code>class ConsumeProductUseCase {
-    execute(input) {
-        const ctx = new DefaultExecutionContext();
-        
-        const data = this.enricher.enrich(ctx, input);
-        this.validator.validate(ctx, data);
-        
-        if (!ctx.isValid()) return ctx;
-        
-        // Execute main action
-        this.client.execute(ctx, data); // CE001
-        
-        return ctx;
-    }
-}</code></pre>
+#### 🛡️ Regras de Negócio
+- **`R001`**: O produto deve existir. -> "Produto não encontrado."
+- **`R002`**: Estoque suficiente disponível. -> "Estoque insuficiente."
 
-        <a href="https://github.com/brdd-design" target="_blank" class="github-link" data-i18n="article.view_md">Ver Markdown original no GitHub (TODO)</a>
+#### 🛠️ Setters
+- **`SET001`**: Atualizar last_consumption_date.
+- **`SET002`**: Decrementar total_stock.
+
+#### ⚡ Efeitos
+- **`EXT001`**: Notificar API de Logística.
+- **`EXT002`**: Alertar se o estoque estiver baixo.</code></pre>
+
+        <a href="https://github.com/brdd-design/brdd/blob/main/articles/PTBR/BRDD-PRACTICAL-EXAMPLE.md" target="_blank" class="github-link" data-i18n="article.view_md">Ver Markdown original no GitHub</a>
       </div>
     </main>
 

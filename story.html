@@ -50,7 +50,7 @@
       <div class="article-content" data-lang-block="en">
         <h1>BRDD - BUSINESS RULE DRIVEN DESIGN (The Journey)</h1>
         <p>Working across different scenarios and business areas in the IT world, I acquired knowledge comparing various realities. At the end of the day, I realized that the biggest problems are almost always the same: misunderstandings between the Product/Business team and the Development team; poorly documented projects; and poorly organized legacy systems that only the creators can maintain. Even the use of AI presents difficulties in these contexts, demanding high token expenditure and delaying the performance of new hires.</p>
-        <p>Aiming to bridge this gap between Business and IT, and to organize the code without inventing a series of complex rules that often do not pay off due to the steep learning curve, I developed a code design pattern based on business rules. This design wasn't born ready, but was improved over time, with each project started from scratch, until it was put to the test in an extremely complex scenario and worked successfully.</p>
+        <p>Aiming to bridge this gap between Business and IT, and to organize the code without inventing a series of complex rules that often do not pay off due to the steep learning curve, I developed a code design pattern based on business rules. This design wasn't born ready. <strong>It was refined by multiple brilliant minds across several companies, tested in the trenches of various real-world situations, and adapted based on feedback to feel less "robotic" and more human.</strong> It evolved from a rigid idea into a practical, battle-tested standard that actually works in extremely complex scenarios.</p>
         
         <h2>Roles</h2>
         <p>Looking at different functionalities in various systems, they might initially seem completely different from each other, but analyzing them abstractly, the vast majority of features will follow this order:</p>
@@ -74,38 +74,38 @@
         <p>Any validated rule, value set by the system, or action executed beyond the main business rule, must be identified and explicitly attributed to a code that represents its origin in a business context. This origin must have an identification code and must be explicitly documented in the repository.</p>
         <p>To ensure that this origin code is present in the codebase, the use of the <code>ValidationContext</code> and <code>ExecutionContext</code> interfaces is recommended. Their function is similar to assert libraries for tests. Later, at the end of the execution, these interfaces serve as a report of everything that was executed during the process, making explicit the origin of that code in the business area.</p>
 
+        <h2>Conclusion: A Bridge to the Future</h2>
+        <p>BRDD is more than just organization; it is a bridge to the future of software development. By making the code semantically identical to the documentation, we create an environment where <strong>AI Agents</strong> can act as true partners, understanding the "why" behind every line. This ensures that the system's architecture remains pristine and aligned with business goals as it grows.</p>
+
+
         <a href="https://github.com/brdd-design" target="_blank" class="github-link" data-i18n="article.view_md">View original Markdown on GitHub (TODO)</a>
       </div>
 
       <!-- PORTUGUESE BLOCK -->
       <div class="article-content" data-lang-block="pt" style="display:none;">
         <h1>BRDD - BUSINESS RULE DRIVEN DESIGN (A Jornada)</h1>
-        <p>Trabalhando em diferentes cenários e áreas de negócio no mundo de TI, adquiri conhecimento comparando as mais variadas realidades. No final do dia, percebi que os maiores problemas são quase sempre os mesmos: desentendimentos entre o time de Produto/Negócios e o time de Desenvolvimento; projetos mal documentados; e sistemas legados mal organizados que apenas os criadores conseguem manter. Até mesmo o uso de IA apresenta dificuldades nesses contextos, demandando um gasto elevado de tokens e prejudicando a performance de novos funcionários.</p>
-        <p>Visando remover esse gap entre o negócio e a TI, e organizar o código sem precisar inventar uma série de regras complexas que muitas vezes não compensam devido à curva de aprendizado elevada, desenvolvi um padrão de design de código baseado nas regras de negócio. Esse design não nasceu pronto, mas sim, foi sendo aprimorado com o tempo, a cada projeto iniciado do zero, até ser posto à prova em um cenário extremamente complexo, e ter funcionado com sucesso.</p>
+        <p>Visando eliminar o gap entre o Negócio e a TI, e organizar o código sem a necessidade de inventar regras complexas, desenvolvi um padrão de design de código baseado nas <strong>regras de negócio</strong>. Este design não nasceu pronto da noite para o dia. <strong>Ele foi sendo aprimorado por diversas mentes brilhantes, em várias empresas diferentes, e testado incansavelmente nas mais diversas situações reais.</strong> Essa evolução coletiva fez com que o padrão deixasse de ser algo "robótico" ou puramente teórico, tornando-se uma ferramenta prática, humana e validada em cenários de extrema complexidade.</p>
         
-        <h2>Papéis</h2>
-        <p>Olhando diferentes funcionalidades, em diversos sistemas, podem até inicialmente aparentar ser completamente diferentes umas das outras, porém analisando de maneira abstrata, a grande maioria das features vai seguir a seguinte ordem:</p>
-        <ul>
-          <li><strong>1-</strong> Enriquecimento dos dados de entrada caso necessário</li>
-          <li><strong>2-</strong> Validação de regras negociais</li>
-          <li><strong>3-</strong> Execução da regra de negócio</li>
-          <li><strong>4-</strong> Enriquecimento da resposta</li>
-        </ul>
-        <p>Pensando nisso nesse modelo deixei explícito que esta separação deve ser feita em diferente tipos de serviço, cada qual com sua especialidade:</p>
-        <ul>
-          <li><strong>Service:</strong> Responsável unicamente pela execução da regra de negócio, principal</li>
-          <li><strong>ValidationService:</strong> Responsável por validar as regra negociais</li>
-          <li><strong>EnrichService:</strong> Responsável por enriquecer dados</li>
-          <li><strong>ClientService:</strong> Responsável por interagir com sistemas externos</li>
-          <li><strong>Listener:</strong> Responsável por receber interações de sistemas externos</li>
-          <li><strong>UseCase:</strong> Faz a orquestração de outros serviços em caso de uma feature mais complexa</li>
+        <h2>Foco Central</h2>
+        <ul class="step-list">
+          <li><strong>1-</strong> Enriquecimento de Dados</li>
+          <li><strong>2-</strong> Validação de Regras de Negócio</li>
+          <li><strong>3-</strong> Execução da Regra</li>
         </ul>
 
-        <h2>Contexto</h2>
-        <p>Qualquer regra validada, valor setado pelo sistema ou ação executada além da regra negocial principal, deve ser identificado e mapeado, e atribuído de maneira explícita a um código que represente a origem daquilo em um contexto de negócios. Essa origem deve ter um código de identificação e deve estar explicitamente documentado no repositório.</p>
-        <p>Para garantir que esse código de origem esteja presente no código é recomendado o uso das interfaces <code>ValidationContext</code> e <code>ExecutionContext</code>. Depois no final da execução essas interfaces servem como relatório de tudo que foi executado durante o processo, ao mesmo tempo que deixa explícito no código a origem daquele código na área de negócios.</p>
+        <h2>Serviços</h2>
+        <ul class="role-list">
+          <li><strong>UseCase:</strong> O orquestrador.</li>
+          <li><strong>Service:</strong> Execução da regra principal.</li>
+          <li><strong>ValidationService:</strong> Validação de regras.</li>
+          <li><strong>EnrichService:</strong> Preparação de dados.</li>
+        </ul>
 
-        <a href="https://github.com/brdd-design" target="_blank" class="github-link" data-i18n="article.view_md">Ver Markdown original no GitHub (TODO)</a>
+        <h2>Conclusão: Uma Ponte para o Futuro</h2>
+        <p>O BRDD é mais do que apenas organização; é uma ponte para o futuro do desenvolvimento de software. Ao tornar o código semanticamente idêntico à documentação, criamos um ambiente onde <strong>Agentes de IA</strong> podem atuar como verdadeiros parceiros, compreendendo o "porquê" por trás de cada linha. Isso garante que a arquitetura do sistema permaneça íntegra e alinhada aos objetivos de negócio à medida que ele cresce.</p>
+
+
+        <a href="https://github.com/brdd-design/brdd/blob/main/articles/PTBR/BRDD-STORY.md" target="_blank" class="github-link" data-i18n="article.view_md">Ver Markdown original no GitHub</a>
       </div>
     </main>
 
@@ -116,7 +116,7 @@
         <p data-i18n="footer.maintained">Officially maintained by <strong>Defol Tech</strong>.</p>
         <div class="footer-links" style="display: flex; justify-content: center; gap: 20px; margin-bottom: 30px;">
           <a href="mailto:defoltech@gmail.com" data-i18n="footer.contact">Contact (Email)</a>
-          <a href="#" target="_blank">LinkedIn (TODO)</a>
+          <a href="https://linkedin.com/company/defol/" target="_blank">LinkedIn</a>
           <a href="https://defol.com.br" target="_blank" data-i18n="footer.company">Company</a>
           <a href="https://github.com/brdd-design" target="_blank">GitHub</a>
         </div>
