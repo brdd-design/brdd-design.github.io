@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 BRDD in Practice: Implementation Guide</title>
+    <meta name="description" content="A step-by-step guide to implementing Business Rule Driven Design roles in a real-world scenario.">
+    <link rel="canonical" href="https://brdd.design/articles/en/brdd-practical-example.html">
+</head>
+<body>
+    <article>
+        <div align="center">
+            <img src="https://raw.githubusercontent.com/brdd-design/brdd/main/assets/logos/logo_color_transparent.png" alt="BRDD Logo" width="400" />
+        </div>
+        <h1>🚀 BRDD in Practice: Implementation Guide</h1>
+        <p>In this article, we apply BRDD concepts to a real-world scenario—<strong>Assignment Submission</strong>—using the version 0.2.0 metadata approach to demonstrate how code becomes self-documenting and decoupled.</p>
+        
+        <hr>
+        
+        <h2>The Scenario: Assignment Submission</h2>
+        <p>Imagine an education platform. When a student submits an assignment, we need to orchestrate the following steps:</p>
+        <ul>
+            <li><strong>R001</strong>: Check if they are enrolled.</li>
+            <li><strong>R002</strong>: Check if the course is active.</li>
+            <li><strong>R003</strong>: Check if the deadline hasn't passed.</li>
+            <li><strong>EFF_DEACTIVATE</strong>: Deactivate previous submissions if they exist.</li>
+            <li><strong>EFF_NOTIFY</strong>: Notify instructors about the new submission.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Step 1: The EnrichService (Data Preparation)</h2>
+        <p>The <code>EnrichService</code> is the role responsible for gathering all external data (Database, APIs, Cache) needed so that business rules can decide without performing I/O.</p>
+        <pre><code class="language-python">class SubmissionEnrichService:
+    """ROLE: EnrichService - Fetches data for the decision process."""
+    def enrich(self, input_data: SubmitInput) -> EnrichedData:
+        # Mocking DB/API calls
+        return EnrichedData(
+            student_id=input_data.student_id,
+            course_active=True,
+            is_enrolled=True,
+            deadline=datetime(2026, 12, 31),
+            previous_submissions=["sub_001"]
+        )</code></pre>
+
+        <h2>Step 2: The ValidateService (Declarative Mode)</h2>
+        <p>Using the 0.2.0 library, the <code>ValidateService</code> uses metadata (<code>@rule</code>) to define what must be checked. The framework handles registering failures in the context.</p>
+        <pre><code class="language-python">class SubmissionValidateService(MetadataValidatorMixin):
+    """ROLE: ValidateService - Checks rules and populates the context."""
+    
+    @rule("R001", "Student is not enrolled in this course.")
+    def check_enrollment(self, data: EnrichedData) -> bool:
+        return data.is_enrolled
+
+    @rule("R003", "The submission deadline has passed.")
+    def check_deadline(self, data: EnrichedData) -> bool:
+        return datetime.now() <= data.deadline</code></pre>
+
+        <h2>Step 3: The BusinessService (Execution & Effects)</h2>
+        <p>The <code>BusinessService</code> handles actual state changes (writes) and triggers events. It is purely executive.</p>
+        <pre><code class="language-python">class SubmissionBusinessService:
+    """ROLE: BusinessService - Persistence and effect triggers."""
+    def save_new_submission(self, data: EnrichedData, content: str) -> str:
+        new_id = f"sub_{uuid.uuid4().hex[:6]}"
+        return new_id
+
+    def notify_instructors(self, submission_id: str):
+        # Notification logic...
+        print(f"Notifying about {submission_id}")</code></pre>
+
+        <hr>
+
+        <h2>Step 4: The UseCase (The Flow Maestro)</h2>
+        <p>The <code>UseCase</code> connects the roles. With the <code>@use_case</code> decorator, it gains a unique identity in the ecosystem and automates the creation of the final report.</p>
+        <pre><code class="language-python">@use_case("UC_EDU_001")
+class SubmitAssignmentUseCase(MetadataUseCaseMixin):
+    """ROLE: UseCase - Orchestrates the flow using specialized services."""
+    def __init__(self, enrich, validate, business):
+        self.enrich = enrich
+        self.validate = validate
+        self.business = business
+
+    def execute(self, input_data: SubmitInput) -> ExecutionContext:
+        # 1. Automatically create context via metadata
+        context = self.create_context(input_data)
+        
+        # 2. Enrichment
+        data = self.enrich.enrich(input_data)
+        
+        # 3. Declarative Validation
+        self.validate.validate_rules(context, data)
+        if not context.is_valid():
+            return context
+            
+        # 4. Business Action
+        new_id = self.business.save_new_submission(data, input_data.content)
+        
+        context.add_effect("EFF_NOTIFY")
+        self.business.notify_instructors(new_id)
+        
+        return context</code></pre>
+
+        <hr>
+
+        <h2>The Final Result: The "Audit Report"</h2>
+        <p>At the end of execution, BRDD delivers a JSON object that serves as a complete audit of the transaction.</p>
+        <pre><code class="language-json">{
+  "status": 201,
+  "errors": [],
+  "metadata": {
+    "use_case": "UC_EDU_001",
+    "rules_passed": ["R001", "R002", "R003"],
+    "setters": ["SET_ID:sub_7a2b91"],
+    "effects": ["EFF_NOTIFY"]
+  }
+}</code></pre>
+
+        <hr>
+
+        <h3>🔗 Navigation</h3>
+        <ul>
+            <li>Back to the <strong><a href="./brdd-manifesto.html">Manifesto</a></strong>.</li>
+            <li>Get to know <strong><a href="./brdd-story.html">The Journey</a></strong>.</li>
+            <li>Access the <a href="https://github.com/brdd-design/brdd">Main Repository</a>.</li>
+        </ul>
+    </article>
+</body>
+</html>

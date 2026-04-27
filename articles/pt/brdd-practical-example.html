@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 BRDD na Prática: Exemplo de Implementação</title>
+    <meta name="description" content="Um guia passo a passo para implementar os papéis do Business Rule Driven Design em um cenário real.">
+    <link rel="canonical" href="https://brdd.design/articles/pt/brdd-practical-example.html">
+</head>
+<body>
+    <article>
+        <div align="center">
+            <img src="https://raw.githubusercontent.com/brdd-design/brdd/main/assets/logos/logo_color_transparent.png" alt="BRDD Logo" width="400" />
+        </div>
+        <h1>🚀 BRDD na Prática: Guia de Implementação</h1>
+        <p>Neste artigo, aplicamos os conceitos do BRDD a um cenário do mundo real—<strong>Envio de Atividade</strong>—utilizando a abordagem de metadados da versão 0.2.0 para demonstrar como o código se torna autodocumentado e desacoplado.</p>
+        
+        <hr>
+        
+        <h2>O Cenário: Envio de Atividade (Assignment Submission)</h2>
+        <p>Imagine uma plataforma de educação. Quando um aluno envia uma atividade, precisamos orquestrar os seguintes passos:</p>
+        <ul>
+            <li><strong>R001</strong>: Verificar se ele está matriculado.</li>
+            <li><strong>R002</strong>: Verificar se o curso está ativo.</li>
+            <li><strong>R003</strong>: Verificar se o prazo final não expirou.</li>
+            <li><strong>EFF_DEACTIVATE</strong>: Desativar envios anteriores, se existirem.</li>
+            <li><strong>EFF_NOTIFY</strong>: Notificar os instrutores sobre o novo envio.</li>
+        </ul>
+
+        <hr>
+
+        <h2>Passo 1: O EnrichService (Preparação de Dados)</h2>
+        <p>O <code>EnrichService</code> é o papel responsável por reunir todos os dados externos (Banco, APIs, Cache) necessários para que as regras de negócio possam decidir sem realizar I/O.</p>
+        <pre><code class="language-python">class SubmissionEnrichService:
+    """ROLE: EnrichService - Busca dados para o processo de decisão."""
+    def enrich(self, input_data: SubmitInput) -> EnrichedData:
+        # Aqui você faria chamadas ao DB ou APIs
+        return EnrichedData(
+            student_id=input_data.student_id,
+            course_active=True,
+            is_enrolled=True,
+            deadline=datetime(2026, 12, 31),
+            previous_submissions=["sub_001"]
+        )</code></pre>
+
+        <h2>Passo 2: O ValidateService (Modo Declarativo)</h2>
+        <p>Utilizando a biblioteca 0.2.0, o <code>ValidateService</code> usa metadados (<code>@rule</code>) para definir o que deve ser verificado. O framework cuida de registrar as falhas no contexto.</p>
+        <pre><code class="language-python">class SubmissionValidateService(MetadataValidatorMixin):
+    """ROLE: ValidateService - Verifica regras e popula o contexto."""
+    
+    @rule("R001", "Aluno não está matriculado neste curso.")
+    def check_enrollment(self, data: EnrichedData) -> bool:
+        return data.is_enrolled
+
+    @rule("R003", "O prazo de envio já expirou.")
+    def check_deadline(self, data: EnrichedData) -> bool:
+        return datetime.now() <= data.deadline</code></pre>
+
+        <h2>Passo 3: O BusinessService (Execução e Efeitos)</h2>
+        <p>O <code>BusinessService</code> lida com as mudanças de estado reais (escrita) e disparos de eventos. Ele é puramente executivo.</p>
+        <pre><code class="language-python">class SubmissionBusinessService:
+    """ROLE: BusinessService - Persistência e gatilhos de efeitos."""
+    def save_new_submission(self, data: EnrichedData, content: str) -> str:
+        new_id = f"sub_{uuid.uuid4().hex[:6]}"
+        return new_id
+
+    def notify_instructors(self, submission_id: str):
+        # Lógica de notificação...
+        print(f"Notificando sobre {submission_id}")</code></pre>
+
+        <hr>
+
+        <h2>Passo 4: O UseCase (O Maestro do Fluxo)</h2>
+        <p>O <code>UseCase</code> conecta os papéis. Com o decorador <code>@use_case</code>, ele ganha uma identidade única no ecossistema e automatiza a criação do relatório final.</p>
+        <pre><code class="language-python">@use_case("UC_EDU_001")
+class SubmitAssignmentUseCase(MetadataUseCaseMixin):
+    """ROLE: UseCase - Orquestra o fluxo usando serviços especializados."""
+    def __init__(self, enrich, validate, business):
+        self.enrich = enrich
+        self.validate = validate
+        self.business = business
+
+    def execute(self, input_data: SubmitInput) -> ExecutionContext:
+        # 1. Cria o contexto automaticamente via metadados
+        context = self.create_context(input_data)
+        
+        # 2. Enriquecimento
+        data = self.enrich.enrich(input_data)
+        
+        # 3. Validação Declarativa
+        self.validate.validate_rules(context, data)
+        if not context.is_valid():
+            return context
+            
+        # 4. Efeitos de Negócio
+        new_id = self.business.save_new_submission(data, input_data.content)
+        
+        context.add_effect("EFF_NOTIFY")
+        self.business.notify_instructors(new_id)
+        
+        return context</code></pre>
+
+        <hr>
+
+        <h2>O Resultado Final: O "Relatório de Guerra"</h2>
+        <p>Ao final da execução, o BRDD entrega um objeto JSON que serve como auditoria completa da transação.</p>
+        <pre><code class="language-json">{
+  "status": 201,
+  "errors": [],
+  "metadata": {
+    "use_case": "UC_EDU_001",
+    "rules_passed": ["R001", "R002", "R003"],
+    "setters": ["SET_ID:sub_7a2b91"],
+    "effects": ["EFF_NOTIFY"]
+  }
+}</code></pre>
+
+        <hr>
+
+        <h3>🔗 Navegação</h3>
+        <ul>
+            <li>Voltar para o <strong><a href="./brdd-manifesto.html">Manifesto</a></strong>.</li>
+            <li>Conheça <strong><a href="./brdd-story.html">A Jornada</a></strong>.</li>
+            <li>Acesse o <a href="https://github.com/brdd-design/brdd">Repositório Principal</a>.</li>
+        </ul>
+    </article>
+</body>
+</html>

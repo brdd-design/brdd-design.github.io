@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 Manifesto BRDD: As 4 Regras de Ouro</title>
+    <meta name="description" content="Os princípios fundamentais do Business Rule Driven Design: garantindo que Negócio e Código operem sob a mesma gramática.">
+    <link rel="canonical" href="https://brdd.design/articles/pt/brdd-manifesto.html">
+</head>
+<body>
+    <article>
+        <div align="center">
+            <img src="https://raw.githubusercontent.com/brdd-design/brdd/main/assets/logos/logo_color_transparent.png" alt="BRDD Logo" width="400" />
+        </div>
+        <h1>📜 Manifesto BRDD: As 4 Regras de Ouro</h1>
+        <p><strong>Business Rule Driven Design (BRDD)</strong> não é apenas uma estrutura de pastas; é um compromisso técnico fundamentado em quatro pilares inegociáveis. O objetivo é garantir que o Negócio e o Código operem sob a mesma gramática.</p>
+        
+        <hr>
+
+        <h2>🏛 Os 4 Pilares</h2>
+        
+        <h3>1. Codificação Única de Regras</h3>
+        <p>Toda regra de negócio, validação ou efeito colateral deve ter um código identificador único (ex: <code>R001</code>). No BRDD, o código não é apenas lógica; é o elo direto com a documentação de negócio. Se uma regra muda no papel, o desenvolvedor sabe exatamente qual linha de código deve ser ajustada.</p>
+        
+        <h3>2. Narrativa de Contexto de Execução</h3>
+        <p>Casos de Uso não devem retornar dados brutos; eles devem narrar o que aconteceu durante o processo através do <code>ExecutionContext</code>. A saída do sistema torna-se um relatório de execução: o que foi validado, o que foi alterado e quais efeitos externos foram disparados. Isso simplifica drasticamente o debugging e a auditoria de processos.</p>
+        
+        <h3>3. Especialização de Serviços</h3>
+        <p>Para manter a manutenibilidade, a lógica deve ser dividida em papéis semânticos claros, evitando serviços com responsabilidades sobrecarregadas. No BRDD, cada serviço tem um propósito definido:</p>
+        <ul>
+            <li><strong>UseCase:</strong> Orquestrador do fluxo lógico.</li>
+            <li><strong>ValidateService:</strong> Especialista em validar a integridade de uma regra.</li>
+            <li><strong>EnrichService:</strong> Responsável por preparar o contexto de dados.</li>
+            <li><strong>BusinessService:</strong> Responsável pela ação principal e efeitos colaterais.</li>
+        </ul>
+        
+        <h3>4. Padrão de Resposta Unificado</h3>
+        <p>Toda interação via API deve seguir um formato JSON estrito e previsível. Isso garante que qualquer consumidor—seja uma interface de usuário ou um agente de IA—saiba exatamente como interpretar o sucesso ou a falha de uma operação.</p>
+        
+        <hr>
+        
+        <h2>🤖 Arquitetura AI-First</h2>
+        <p>O BRDD foi projetado especificamente para maximizar a eficiência de IAs e Copilots. Ao isolar regras em metadados e serviços especializados, eliminamos a ambiguidade técnica.</p>
+        <ul>
+            <li><strong>Master Prompts:</strong> A documentação em <code>.md</code> atua como uma especificação técnica "viva" e executável.</li>
+            <li><strong>Segurança Arquitetural:</strong> Com fronteiras bem definidas, evitamos que a IA introduza efeitos colaterais indesejados durante a implementação de novas validações.</li>
+        </ul>
+        
+        <hr>
+        
+        <h3>🔗 Próximos Passos</h3>
+        <ul>
+            <li>Veja um exemplo real no <strong><a href="./brdd-practical-example.html">Exemplo Prático</a></strong>.</li>
+            <li>Entenda a origem deste padrão em <strong><a href="./brdd-story.html">A Jornada</a></strong>.</li>
+        </ul>
+    </article>
+</body>
+</html>

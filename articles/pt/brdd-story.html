@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRDD - BUSINESS RULE DRIVEN DESIGN (A Jornada)</title>
+    <meta name="description" content="A história por trás do BRDD: como a lacuna entre Negócio e TI levou a um novo padrão arquitetural.">
+    <link rel="canonical" href="https://brdd.design/articles/pt/brdd-story.html">
+</head>
+<body>
+    <article>
+        <div align="center">
+            <img src="https://raw.githubusercontent.com/brdd-design/brdd/main/assets/logos/logo_color_transparent.png" alt="BRDD Logo" width="400" />
+        </div>
+        <h1>BRDD - BUSINESS RULE DRIVEN DESIGN (A Jornada)</h1>
+        <p>Ao trabalhar em diversos setores de negócios no mundo da TI, percebi que os problemas estruturais são quase sempre os mesmos: uma falha crônica de comunicação entre as equipes de Produto/Negócio e as equipes de Desenvolvimento; projetos mal documentados; e sistemas legados complexos que apenas seus criadores conseguem manter.</p>
+        
+        <p>Com o objetivo de eliminar essa lacuna entre Negócio e TI, e organizar o código sem criar camadas desnecessárias de complexidade, desenvolvi um padrão de design estritamente baseado em <strong>regras de negócio</strong>. Este design foi refinado por múltiplas mentes brilhantes e testado em diversas situações reais.</p>
+        
+        <hr>
+
+        <h2>Fundamentos do Modelo</h2>
+        <p>Adotei o <strong>MVC</strong> e o <strong>DDD</strong> como base devido à sua simplicidade e alta adoção no mercado. Como este modelo respeita padrões amplamente aceitos, ele pode ser adaptado para qualquer linguagem ou framework.</p>
+        
+        <hr>
+
+        <h2>Papéis e Responsabilidades</h2>
+        <p>A grande maioria das funcionalidades segue um fluxo lógico comum:</p>
+        <ol>
+            <li><strong>Enriquecimento</strong> de dados de entrada (preparação de contexto);</li>
+            <li><strong>Validação</strong> de regras de negócio (garantia de integridade);</li>
+            <li><strong>Execução</strong> da regra de negócio (ação principal);</li>
+            <li><strong>Enriquecimento</strong> da resposta (formatação de saída).</li>
+        </ol>
+        
+        <p>No modelo <strong>BRDD</strong>, essas ações são separadas em tipos de serviços especializados:</p>
+        <ul>
+            <li><strong>UseCase:</strong> O orquestrador que compõe o fluxo de ponta a ponta.</li>
+            <li><strong>ValidateService:</strong> Classes de responsabilidade única focadas em uma regra específica.</li>
+            <li><strong>EnrichService:</strong> Classes focadas em buscar dados necessários para o contexto.</li>
+            <li><strong>BusinessService:</strong> Responsável por executar a lógica principal.</li>
+            <li><strong>ClientService:</strong> Responsável pela comunicação com sistemas externos.</li>
+        </ul>
+        
+        <hr>
+
+        <h2>O Contexto de Negócio</h2>
+        <p>Qualquer regra validada, valor ou efeito colateral deve ser identificado por um código que represente sua origem no contexto de negócio (ex: <code>R001</code>). Essa documentação é mantida no repositório (ex: <code>BUSINESS_RULES.md</code>).</p>
+        
+        <h3>Exemplo de Mapeamento:</h3>
+        <ul>
+            <li><strong>Regra de Negócio:</strong> <code>(R001)</code> Validar disponibilidade de estoque.</li>
+            <li><strong>Caso de Uso:</strong> <code>(US001)</code> Consumo de produto.</li>
+            <li><strong>Efeito Colateral:</strong> <code>(CE001)</code> Notificação de sistema externo.</li>
+            <li><strong>Valor Carregado:</strong> <code>(SET001)</code> Timestamp da operação.</li>
+        </ul>
+        
+        <hr>
+
+        <h2>Arquitetura AI-First</h2>
+        <p>O grande diferencial do BRDD hoje é seu suporte nativo ao desenvolvimento assistido por IA. Ao tornar o código semanticamente idêntico à documentação, criamos um ambiente onde <strong>Agentes de IA</strong> podem atuar como parceiros estratégicos.</p>
+        
+        <hr>
+        
+        <h3>🔗 Próximos Passos</h3>
+        <ul>
+            <li>Leia o <strong><a href="./brdd-manifesto.html">Manifesto BRDD</a></strong>.</li>
+            <li>Veja o <strong><a href="./brdd-practical-example.html">Exemplo Prático</a></strong>.</li>
+            <li>Confira o repositório no <a href="https://github.com/brdd-design/brdd">GitHub</a>.</li>
+        </ul>
+    </article>
+</body>
+</html>

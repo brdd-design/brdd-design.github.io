@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📜 BRDD Manifesto: The 4 Golden Rules</title>
+    <meta name="description" content="The core principles of Business Rule Driven Design: ensuring Business and Code operate under the same grammar.">
+    <link rel="canonical" href="https://brdd.design/articles/en/brdd-manifesto.html">
+</head>
+<body>
+    <article>
+        <div align="center">
+            <img src="https://raw.githubusercontent.com/brdd-design/brdd/main/assets/logos/logo_color_transparent.png" alt="BRDD Logo" width="400" />
+        </div>
+        <h1>📜 BRDD Manifesto: The 4 Golden Rules</h1>
+        <p><strong>Business Rule Driven Design (BRDD)</strong> is not just a folder structure; it is a technical commitment grounded in four non-negotiable pillars. The goal is to ensure that Business and Code operate under the same grammar.</p>
+        
+        <hr>
+
+        <h2>🏛 The 4 Pillars</h2>
+        
+        <h3>1. Unique Rule Coding</h3>
+        <p>Every business rule, validation, or side effect must have a unique identifier code (e.g., <code>R001</code>). In BRDD, the code is not just logic; it is the direct link to the business documentation. If a rule changes on paper, the developer knows exactly which line of code must be adjusted.</p>
+        
+        <h3>2. Execution Context Narrative</h3>
+        <p>Use Cases should not return raw data; they should narrate what happened during the process through the <code>ExecutionContext</code>. The system output becomes an execution report: what was validated, what was changed, and which external effects were triggered. This drastically simplifies debugging and process auditing.</p>
+        
+        <h3>3. Service Specialization</h3>
+        <p>To maintain maintainability, logic must be divided into clear semantic roles, avoiding services with overloaded responsibilities. In BRDD, each service has a defined purpose:</p>
+        <ul>
+            <li><strong>UseCase:</strong> Orchestrator of the logical flow.</li>
+            <li><strong>ValidateService:</strong> Specialist in validating the integrity of a rule.</li>
+            <li><strong>EnrichService:</strong> Responsible for preparing the data context.</li>
+            <li><strong>BusinessService:</strong> Responsible for the main action and side effects.</li>
+        </ul>
+        
+        <h3>4. Unified Response Pattern</h3>
+        <p>Every API interaction must follow a strict and predictable JSON format. This ensures that any consumer—be it a user interface or an AI agent—knows exactly how to interpret the success or failure of an operation.</p>
+        
+        <hr>
+        
+        <h2>🤖 AI-First Architecture</h2>
+        <p>BRDD was specifically designed to maximize the efficiency of AI and Copilots. By isolating rules into metadata and specialized services, we eliminate technical ambiguity.</p>
+        <ul>
+            <li><strong>Master Prompts:</strong> Documentation in <code>.md</code> acts as a "live" and executable technical specification.</li>
+            <li><strong>Architectural Security:</strong> With well-defined boundaries, we prevent AI from introducing unintended side effects during the implementation of new validations.</li>
+        </ul>
+        
+        <hr>
+        
+        <h3>🔗 Next Steps</h3>
+        <ul>
+            <li>See a real example in the <strong><a href="./brdd-practical-example.html">Practical Example</a></strong>.</li>
+            <li>Understand the origin of this pattern in <strong><a href="./brdd-story.html">The Journey</a></strong>.</li>
+        </ul>
+    </article>
+</body>
+</html>
