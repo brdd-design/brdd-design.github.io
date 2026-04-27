@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>BRDD - BUSINESS RULE DRIVEN DESIGN (A Jornada)</title>
+</head>
+<body>
+    <article>
+        <div align="center">
+  <img src="https://raw.githubusercontent.com/brdd-design/brdd/main/assets/generic_cover_landscape.png" alt="BRDD Story Cover" width="800" />
+</div><h1>BRDD - BUSINESS RULE DRIVEN DESIGN (A Jornada)</h1>
+<p>Trabalhando em diferentes cenários e áreas de negócio no setor de TI, adquiri conhecimento comparando as mais variadas realidades. No final do dia, percebi que os problemas estruturais são quase sempre os mesmos: o desentendimento crônico entre o time de Produto/Negócios e o time de Desenvolvimento; projetos mal documentados; e sistemas legados complexos que apenas os seus criadores conseguem manter. Até mesmo o uso de IA apresenta dificuldades nesses contextos, pois demanda um gasto elevado de tokens tentando &quot;adivinhar&quot; a intenção por trás de um código mal estruturado, o que prejudica a performance de novos integrantes e a evolução do projeto.</p>
+<p>Visando eliminar esse gap entre o Negócio e a TI, e organizar o código sem a necessidade de criar camadas de complexidade desnecessárias (que muitas vezes não compensam devido à elevada curva de aprendizado), desenvolvi um padrão de design baseado estritamente nas <strong>regras de negócio</strong>. Este design não nasceu pronto da noite para o dia. <strong>Ele foi sendo aprimorado por diversas mentes brilhantes, em várias empresas diferentes, e testado incansavelmente nas mais diversas situações reais.</strong> Essa evolução coletiva fez com que o padrão deixasse de ser algo &quot;robótico&quot; ou puramente teórico, tornando-se uma ferramenta prática, humana e validada em cenários de extrema complexidade.</p>
+<h3>Bases do Modelo</h3>
+<p>Adotei o <strong>MVC</strong> e o <strong>DDD</strong> como fundação devido à sua simplicidade e alta aderência no mercado. O DDD permite que o modelo funcione bem tanto para grandes monolitos quanto para microsserviços. Como este modelo respeita padrões amplamente aceitos, ele pode ser adaptado aos <em>standards</em> recomendados para qualquer linguagem ou framework, exigindo apenas ajustes finos sem ferir as regras fundamentais.</p>
+<hr>
+<h2>Papéis e Responsabilidades</h2>
+<p>Ao analisar diferentes funcionalidades em sistemas distintos, percebe-se que, de maneira abstrata, a grande maioria das <em>features</em> segue um fluxo lógico comum:</p>
+<ol>
+<li><strong>Enriquecimento dos dados de entrada</strong> (preparação do contexto);</li>
+<li><strong>Validação das regras de negócio</strong> (garantia da integridade);</li>
+<li><strong>Execução da regra de negócio</strong> (ação principal);</li>
+<li><strong>Enriquecimento da resposta</strong> (formatação do retorno).</li>
+</ol>
+<p>Embora a ordem possa variar ou algum passo seja opcional, o fluxo invariavelmente contém: <strong>Enriquecimento</strong>, <strong>Validação</strong> e <strong>Execução</strong>. </p>
+<p>Geralmente, essas ações estão misturadas na camada de <em>Service</em>, pois não existe um consenso rígido no mercado sobre onde traçar essas fronteiras. No modelo <strong>BRDD</strong>, deixo explícito que essa separação deve ser feita em tipos de serviços especializados:</p>
+<ul>
+<li><strong>Service:</strong> Responsável unicamente pela execução da lógica de negócio principal.</li>
+<li><strong>ValidationService:</strong> Classes de responsabilidade única focadas em validar uma regra específica (ex: <code>CheckStockValidator</code>).</li>
+<li><strong>EnrichService:</strong> Classes focadas em buscar ou calcular dados necessários para o contexto (ex: <code>GetProductInfoEnricher</code>).</li>
+<li><strong>ClientService:</strong> Responsável pela comunicação com sistemas externos.</li>
+<li><strong>Listener:</strong> Responsável por capturar interações externas e disparar fluxos.</li>
+<li><strong>UseCase:</strong> O orquestrador que utiliza <code>ValidationServices</code> e <code>EnrichServices</code> para compor o fluxo de ponta a ponta.</li>
+</ul>
+<hr>
+<h2>O Contexto de Negócio</h2>
+<p>Qualquer regra validada, valor definido pelo sistema ou efeito colateral deve ser identificado e atribuído explicitamente a um código que represente sua origem no contexto de negócios. Esta origem deve possuir um identificador único e estar documentada no repositório (recomenda-se o uso de arquivos <code>.md</code>, como o <code>BUSINESS_RULES.md</code>).</p>
+<h3>Exemplo de Fluxo</h3>
+<p>Para realizar o consumo de um produto, deve-se primeiro validar se existe estoque suficiente. Após o consumo, sistemas parceiros devem ser notificados e a data de atualização deve ser registrada.</p>
+<p>Neste cenário, mapeamos:</p>
+<ul>
+<li><strong>Regra Negocial:</strong> <code>(R001)</code> Validar disponibilidade de estoque.</li>
+<li><strong>Use Case:</strong> <code>(US001)</code> Consumo de produto.</li>
+<li><strong>Efeito Colateral:</strong> <code>(CE001)</code> Notificação de sistemas externos.</li>
+<li><strong>Valor Carregado:</strong> <code>(SET001)</code> Timestamp da operação.</li>
+</ul>
+<p>Dessa forma, quando o time de negócios define uma nova funcionalidade, já o faz utilizando códigos que o desenvolvedor reconhecerá instantaneamente no código.</p>
+<hr>
+<h2>Arquitetura AI-First</h2>
+<p>O grande diferencial do BRDD hoje é o suporte nativo ao desenvolvimento assistido por IA. Ao tornar o código semanticamente idêntico à documentação, criamos um ambiente onde <strong>Agentes de IA</strong> podem atuar como parceiros estratégicos, compreendendo o &quot;porquê&quot; por trás de cada linha. Isso não apenas acelera o desenvolvimento, mas garante que a arquitetura permaneça íntegra e alinhada aos objetivos de negócio à medida que o sistema escala.</p>
+<hr>
+<h3>🔗 Próximos Passos</h3>
+<p>Para uma formalização enxuta das regras, leia o <strong><a href="../../BRDD.md">Manifesto BRDD</a></strong>.
+Confira o repositório no <a href="https://github.com/brdd-design/brdd">GitHub</a>.</p>
+
+    </article>
+</body>
+</html>
