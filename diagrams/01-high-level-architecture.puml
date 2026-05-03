@@ -49,7 +49,7 @@ package "External Layer" {
 [ValidateService] ..> [ValidationContext] : creates (Errors only)
 [ValidateService] --> [Domain Model] : validates (requires enriched data)
 [EnrichService] --> [Domain Model] : queries & enriches (no logic)
-[BusinessService] --> [Domain Model] : executes business rules
+[BusinessService] --> [Domain Model] : executes use case action
 
 [ClientService] --> [External Domain] : interacts (converts Internal <-> External)
 [Listener] --> [External Domain] : consumes

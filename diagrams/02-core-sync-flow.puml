@@ -32,7 +32,7 @@ else (Sim - Complex Flow)
     else (Não)
       partition "Execução Principal" {
         if (Lógica é Interna ou Externa?) then (Interna)
-          :UseCase executa **BusinessService** (Regra de Negócios);
+          :UseCase executa **BusinessService** (Ação Principal do Caso de Uso);
         else (Externa)
           :UseCase executa **ClientService** (Integração Externa);
         endif

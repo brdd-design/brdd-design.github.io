@@ -57,12 +57,12 @@
         <ul>
           <li><strong>1-</strong> Enrichment of input data if necessary</li>
           <li><strong>2-</strong> Validation of business rules</li>
-          <li><strong>3-</strong> Execution of the business rule</li>
+          <li><strong>3-</strong> Execution of the use case</li>
           <li><strong>4-</strong> Enrichment of the response</li>
         </ul>
         <p>Thinking about this, in this model I made it explicit that this separation must be done in different types of services, each with its specialty:</p>
         <ul>
-          <li><strong>Service:</strong> Responsible solely for the execution of the main business rule.</li>
+          <li><strong>BusinessService:</strong> Responsible solely for the execution of the main use case action.</li>
           <li><strong>ValidationService:</strong> Responsible for validating business rules.</li>
           <li><strong>EnrichService:</strong> Responsible for enriching data.</li>
           <li><strong>ClientService:</strong> Responsible for interacting with external systems.</li>
@@ -71,7 +71,7 @@
         </ul>
 
         <h2>Context</h2>
-        <p>Any validated rule, value set by the system, or action executed beyond the main business rule, must be identified and explicitly attributed to a code that represents its origin in a business context. This origin must have an identification code and must be explicitly documented in the repository.</p>
+        <p>Any validated rule, value set by the system, or action executed beyond the main use case action, must be identified and explicitly attributed to a code that represents its origin in a business context. This origin must have an identification code and must be explicitly documented in the repository.</p>
         <p>To ensure that this origin code is present in the codebase, the use of the <code>ValidationContext</code> and <code>ExecutionContext</code> interfaces is recommended. Their function is similar to assert libraries for tests. Later, at the end of the execution, these interfaces serve as a report of everything that was executed during the process, making explicit the origin of that code in the business area.</p>
 
         <h2>Conclusion: A Bridge to the Future</h2>
@@ -90,13 +90,13 @@
         <ul class="step-list">
           <li><strong>1-</strong> Enriquecimento de Dados</li>
           <li><strong>2-</strong> Validação de Regras de Negócio</li>
-          <li><strong>3-</strong> Execução da Regra</li>
+          <li><strong>3-</strong> Execução do Caso de Uso</li>
         </ul>
 
         <h2>Serviços</h2>
         <ul class="role-list">
           <li><strong>UseCase:</strong> O orquestrador.</li>
-          <li><strong>Service:</strong> Execução da regra principal.</li>
+          <li><strong>BusinessService:</strong> Execução da ação principal do caso de uso.</li>
           <li><strong>ValidationService:</strong> Validação de regras.</li>
           <li><strong>EnrichService:</strong> Preparação de dados.</li>
         </ul>
